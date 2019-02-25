@@ -1,4 +1,4 @@
-# Projeto Flashcards :blue_book:
+# Projeto Flashcards :game_die:
 
 Projeto Flashcards: um aplicativo web de conteúdo e comentários.
 Descrição:
