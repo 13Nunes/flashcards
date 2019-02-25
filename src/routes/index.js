@@ -6,6 +6,7 @@ import HomeScreen from '../screens/home';
 import AddDeckScreen from '../screens/addDeck';
 import ShowCard from '../screens/showCard';
 import AddCard from '../screens/addCard';
+import Quiz from '../screens/quiz';
 
 // Default config
 const defaultNavigationOptions = {
@@ -33,6 +34,9 @@ const MainNavigatorStack = createStackNavigator(
     },
     AddCard: {
       screen: AddCard,
+    },
+    Quiz: {
+      screen: Quiz,
     }
   },
   {

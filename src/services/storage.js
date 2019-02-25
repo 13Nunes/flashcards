@@ -8,12 +8,12 @@ import { addDeck } from '../store/actions/decks';
 // Set key
 export const DECKS_STORAGE_KEY = 'Flashcards::decks';
 
+// Methods
 export function getDecks() {
   return AsyncStorage
     .getItem(DECKS_STORAGE_KEY)
     .then((decks) => JSON.parse(decks))
 }
-
 export function saveDeck(title) {
   const id = uuid.v4().replace(/-/g, "");
 

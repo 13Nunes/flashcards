@@ -13,6 +13,9 @@ import {
   ListItem
 } from 'react-native-elements';
 
+// Services
+import { setLocalNotification, clearLocalNotification } from '../../services/notification';
+
 // Storage / Redux
 import { handleRemoveDeck, handleRemoveCard } from '../../store/actions/decks';
 
@@ -42,12 +45,22 @@ class ShowCard extends React.Component {
     this.props.navigation.navigate(name, params);
   }
   deleteDeck = (deckId) => {
+    // Remove deck
     this.props.dispatch(handleRemoveDeck(deckId));
+
+    // Go to home
     this.props.navigation.navigate('Home');
   }
   deleteCard = (cardId) => {
     const deck = this.props.navigation.getParam('deck');
     this.props.dispatch(handleRemoveCard(deck.id, cardId));
+  }
+  startQuiz = (deckId) => {
+    // Clear current notification and schedule next
+    clearLocalNotification().then(setLocalNotification);
+
+    // Go to quiz scren
+    this.props.navigation.navigate('Quiz', { deckId });
   }
   keyExtractor = (item, index) => item.question;
   renderItem = ({ item }) => (
@@ -67,26 +80,36 @@ class ShowCard extends React.Component {
     const deck = this.props.navigation.getParam('deck');
     const { decks } = this.props;
 
+    if (!decks.list[deck.id]) return (
+      <Text>Wainting...</Text>
+    );
+
     return (
       <View style={styles.container}>
         <View style={styles.toolbar}>
           <View style={styles.toolbarTitle}>
             <Avatar rounded size="large" overlayContainerStyle={{ backgroundColor: '#4388D6' }} icon={{ name: 'cards', type: 'material-community' }} />
-            <Text style={{ marginLeft: 20, fontSize: 25 }}>{deck.title}</Text>
+            <View style={{ marginLeft: 20, }}>
+              <Text style={{ fontSize: 25 }}>{deck.title}</Text>
+              <Text>{decks.list[deck.id].cards.length} cards</Text>
+            </View>
           </View>
           <Divider style={{ backgroundColor: 'blue' }} />
           <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
             <Button title="Delete deck" buttonStyle={{ backgroundColor: '#CC2218' }} onPress={() => this.deleteDeck(deck.id)}></Button>
+            {decks.list[deck.id].cards.length > 0 && (
+              <Button title="Quiz" buttonStyle={{ backgroundColor: '#1D9C73' }} onPress={() => this.startQuiz(deck.id)}></Button>
+            )}
             <Button title="Add card" onPress={() => this.goToScreen('AddCard', { deck })}></Button>
           </View>
         </View>
         <View style={styles.cardlist}>
-          {(decks.list[deck.id] && decks.loading === false && decks.list[deck.id].cards.length === 0) && (
+          {(decks.loading === false && decks.list[deck.id].cards.length === 0) && (
             <View style={{ flex: 0.3, justifyContent: 'center', alignItems: 'center' }}>
               <Text style={{ color: '#4388D6' }}>No cards founded.</Text>
             </View>
           )}
-          {(decks.list[deck.id] && decks.loading === false) && (
+          {(decks.loading === false) && (
             <FlatList
               keyExtractor={this.keyExtractor}
               data={decks.list[deck.id].cards}
