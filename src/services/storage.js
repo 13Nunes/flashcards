@@ -12,7 +12,10 @@ export const DECKS_STORAGE_KEY = 'Flashcards::decks';
 export function getDecks() {
   return AsyncStorage
     .getItem(DECKS_STORAGE_KEY)
-    .then((decks) => JSON.parse(decks))
+    .then((decks) => {
+      if (decks === null) return {};
+      return JSON.parse(decks)
+    })
 }
 export function saveDeck(title) {
   const id = uuid.v4().replace(/-/g, "");
@@ -31,4 +34,13 @@ export function saveDeck(title) {
       AsyncStorage.setItem(DECKS_STORAGE_KEY, JSON.stringify(decksUpdated));
       this.props.dispatch(addDeck(decksUpdated));
     });
+}
+export async function clearAll() {
+  try {
+    await AsyncStorage.removeItem(DECKS_STORAGE_KEY);
+    return true;
+  }
+  catch (exception) {
+    return false;
+  }
 }

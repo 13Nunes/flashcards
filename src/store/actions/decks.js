@@ -22,7 +22,11 @@ function getDecks(decks) {
 export function handleGetDecks() {
   return dispatch => {
     return AsyncStorage.getItem(DECKS_STORAGE_KEY).then(decks => {
-      dispatch(getDecks(JSON.parse(decks)));
+      if (decks === null) {
+        return dispatch(getDecks({}));
+      } else {
+        return dispatch(getDecks(JSON.parse(decks)));
+      }
     });
   };
 }

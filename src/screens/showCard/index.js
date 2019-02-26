@@ -81,7 +81,7 @@ class ShowCard extends React.Component {
     const { decks } = this.props;
 
     if (!decks.list[deck.id]) return (
-      <Text>Wainting...</Text>
+      <Text>Waiting...</Text>
     );
 
     return (

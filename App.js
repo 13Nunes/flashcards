@@ -10,6 +10,10 @@ import AppContainer from "./src/routes";
 import reducers from './src/store/reducers';
 import middlewares from './src/store/middlewares';
 
+// Clear store
+//import { clearAll } from './src/services/storage';
+//clearAll();
+
 // Init Store
 const store = createStore(reducers, middlewares);
 
